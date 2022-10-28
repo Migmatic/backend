@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const APP_SECRET = process.env.APP_SECRET;
 
 /** 
  * * CHECKMAIL
@@ -47,13 +48,14 @@ exports.signup = (req, res, next) => {
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
                     if (!valid) {
-                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                        return res.status(401).json({ error: 'Mot de passe incorrect !' }); 
                     }
+
                     res.status(200).json({
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
+                            'FLIPFLOP',
                             { expiresIn: '1h' } // La session ne sera valide qu'une heure
                         )
                     });
